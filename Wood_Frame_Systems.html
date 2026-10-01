@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Activity 2.1.1: Wood Frame Systems Research Lab</title>
+  <style>
+    :root {
+      --primary: #2c3e50;
+      --accent: #d35400;
+      --accent-light: #e67e22;
+      --bg: #f8f9fa;
+      --card-bg: #ffffff;
+      --border: #e0e0e0;
+      --text: #2d3748;
+      --success: #27ae60;
+      --warning: #e67e22;
+      --error: #e74c3c;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding: 20px; line-height: 1.6; }
+
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 16px 24px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+
+    header h1 { font-size: 1.5rem; margin-bottom: 4px; }
+    header p { opacity: 0.9; font-size: 0.88rem; }
+
+    .student-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 10px 14px;
+      border-radius: 8px;
+    }
+
+    .student-info input {
+      padding: 6px 10px;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 6px;
+      background: white;
+      color: var(--text);
+      width: 100%;
+      font-size: 0.85rem;
+    }
+
+    .teacher-alert-banner {
+      background: #fef3c7;
+      border: 2px solid #f59e0b;
+      color: #92400e;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 0.88rem;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .app-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    @media (max-width: 992px) {
+      .app-container { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      margin-bottom: 16px;
+    }
+
+    .image-card-sticky {
+      position: sticky;
+      top: 16px;
+    }
+
+    .image-map-wrapper {
+      position: relative;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      padding: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .image-map-wrapper img {
+      max-width: 100%;
+      max-height: 62vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      border-radius: 6px;
+    }
+
+    .score-badge {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--primary);
+      background: #e2e8f0;
+      padding: 2px 10px;
+      border-radius: 16px;
+    }
+
+    .progress-bar-container {
+      margin-bottom: 8px;
+      background: #e2e8f0;
+      border-radius: 20px;
+      height: 10px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--success);
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    .stats-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .word-bank-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .word-chip {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      padding: 4px 10px;
+      border-radius: 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text);
+      transition: all 0.3s ease;
+    }
+
+    .word-chip.used {
+      text-decoration: line-through;
+      background: #e2e8f0;
+      color: #94a3b8;
+      border-color: #e2e8f0;
+      opacity: 0.6;
+    }
+
+    .workbench-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+
+    .component-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 12px;
+    }
+
+    .nav-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+    }
+
+    .nav-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .nav-btn.completed { background: var(--success); color: white; border-color: var(--success); }
+    .nav-btn.clue-used { background: var(--warning); color: white; border-color: var(--warning); }
+
+    .form-group { margin-bottom: 12px; }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 4px;
+      font-size: 0.85rem;
+      color: #4a5568;
+    }
+
+    .focus-keywords-badge {
+      display: none;
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    .form-group textarea { min-height: 75px; resize: vertical; }
+
+    .feedback-box {
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    .feedback-box.error { background: #fde8e8; border: 1px solid var(--error); color: #9b1c1c; }
+    .feedback-box.warning { background: #feecdc; border: 1px solid var(--warning); color: #9a3412; }
+    .feedback-box.success { background: #def7ec; border: 1px solid var(--success); color: #03543f; }
+
+    .hint-box {
+      background: #fffbe6;
+      border: 1px solid #f39c12;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    .btn {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.88rem;
+      transition: background 0.2s;
+    }
+
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: var(--accent-light); }
+    .btn-primary:disabled { background: #cbd5e0; cursor: not-allowed; }
+    .btn-secondary { background: #e2e8f0; color: var(--text); }
+    .btn-secondary:hover { background: #cbd5e0; }
+    .btn-warning { background: #f39c12; color: white; }
+    .btn-warning:hover { background: #d35400; }
+
+    .action-bar {
+      margin-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .legend-container {
+      display: flex;
+      gap: 14px;
+      font-size: 0.78rem;
+      margin-top: 4px;
+    }
+
+    .legend-item { display: flex; align-items: center; gap: 5px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+    @media print {
+      body { background: white; padding: 0; }
+      .app-container { display: block; }
+      .image-map-wrapper, .component-nav, .action-bar, .hint-toggle, .btn, .teacher-alert-banner, .word-bank-card { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Activity 2.1.1: Wood Frame Systems Research Lab</h1>
+    <p>Review the 3D structural image, match each numbered component callout on the schematic to its station, and research its label and primary purpose.</p>
+    
+    <div class="student-info">
+      <div>
+        <label style="font-size: 0.75rem; display:block; margin-bottom: 2px;">Student Name:</label>
+        <input type="text" id="studentName" placeholder="Enter your full name" oninput="saveData()">
+      </div>
+      <div>
+        <label style="font-size: 0.75rem; display:block; margin-bottom: 2px;">Class / Period:</label>
+        <input type="text" id="studentClass" placeholder="e.g. Civil Engineering - P3" oninput="saveData()">
+      </div>
+    </div>
+  </header>
+
+  <div class="teacher-alert-banner">
+    <span>📢 <strong>IMPORTANT:</strong> When finished, raise your hand or call your teacher over to verify your total score on screen before closing this page!</span>
+  </div>
+
+  <div class="card" style="margin-bottom: 16px;">
+    <div class="stats-header">
+      <div>
+        <span>Research Progress: </span>
+        <span id="progressText">0 / 18 Components Completed</span>
+      </div>
+      <div>
+        <span>Total Score: </span>
+        <span class="score-badge" id="totalScore">0%</span>
+      </div>
+    </div>
+    <div class="progress-bar-container">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="legend-container">
+      <div class="legend-item"><span class="dot" style="background: #3b82f6;"></span> Unanswered</div>
+      <div class="legend-item"><span class="dot" style="background: #27ae60;"></span> Correct (Full Credit)</div>
+      <div class="legend-item"><span class="dot" style="background: #f39c12;"></span> Correct (50% Clue Penalty)</div>
+    </div>
+  </div>
+
+  <div class="app-container">
+    <div class="card image-card-sticky">
+      <h2 style="font-size: 1.1rem; margin-bottom: 8px;">Wood Framing System Schematic</h2>
+      <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 8px;">Locate the numbered blue callout badge on the diagram below for the active station.</p>
+      
+      <div class="image-map-wrapper">
+        <img src="https://lh3.googleusercontent.com/d/1DpSweClGheeseEeO0v_1H5JPH294etIk" alt="Wood Frame Structure Labeled Diagram">
+      </div>
+    </div>
+
+    <div>
+      <div class="card word-bank-card">
+        <h2 style="font-size: 1rem; margin-bottom: 2px;">🔤 Component Word Bank</h2>
+        <p style="font-size: 0.78rem; color: #64748b;">Terms cross off automatically as you identify each component correctly.</p>
+        <div class="word-bank-grid" id="wordBankGrid"></div>
+      </div>
+
+      <div class="card">
+        <div class="workbench-header">
+          <h2 style="font-size: 1.1rem;" id="workbenchTitle">Station #1 Analysis</h2>
+          <span style="font-size: 0.78rem; background: #e2e8f0; padding: 3px 8px; border-radius: 12px;" id="statusBadge">Incomplete</span>
+        </div>
+
+        <div class="component-nav" id="navButtons"></div>
+
+        <div class="feedback-box" id="feedbackBox"></div>
+
+        <div class="hint-box" id="hintBox">
+          <strong>⚠️ Clue Penalty Applied:</strong> <span id="hintText">Clue loading...</span>
+        </div>
+
+        <div class="form-group">
+          <label for="compName" id="lblCompName">Station #1 Component Name / Technical Label:</label>
+          <input type="text" id="compName" placeholder="Enter term from the word bank..." oninput="updateCurrentData()">
+        </div>
+
+        <div class="form-group">
+          <label for="compPurpose" id="lblCompPurpose">Station #1 Structural Purpose & Description:</label>
+          <div class="focus-keywords-badge" id="keywordPrompt">📌 Correct name identified! Now include these key terms in your description: <b>OSB</b> or <b>Plywood</b>, and <b>Flat Surface</b></div>
+          <textarea id="compPurpose" placeholder="Write a complete sentence describing its function using the required terms above..." oninput="updateCurrentData()"></textarea>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+          <button class="btn btn-warning hint-toggle" id="clueBtn" onclick="requestClue()">💡 Request Research Clue</button>
+          <div>
+            <button class="btn btn-secondary" onclick="navigate(-1)">Previous</button>
+            <button class="btn btn-primary" id="nextBtn" onclick="navigate(1)">Next Station</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="action-bar">
+    <button class="btn btn-secondary" onclick="resetForm()">🔄 Restart Assignment (Retry for Full 100% Credit)</button>
+    <button class="btn btn-primary" onclick="exportWorksheet()">🖨️️ Export / Print Score Summary</button>
+  </div>
+
+  <script>
+    const wordBankTerms = [
+      { id: "term-6", text: "Header", stationId: 6 },
+      { id: "term-14", text: "Sheathing", stationId: 14 },
+      { id: "term-2", text: "Sub Floor", stationId: 2 },
+      { id: "term-11", text: "Truss", stationId: 11 },
+      { id: "term-8", text: "Cripple Stud", stationId: 8 },
+      { id: "term-1", text: "Floor Joist", stationId: 1 },
+      { id: "term-16", text: "Siding", stationId: 16 },
+      { id: "term-4", text: "Top Plate", stationId: 4 },
+      { id: "term-13", text: "Insulation", stationId: 13 },
+      { id: "term-10", text: "Jack Stud", stationId: 10 },
+      { id: "term-17", text: "Underlayment (Roof Felt)", stationId: 17 },
+      { id: "term-3", text: "Studs", stationId: 3 },
+      { id: "term-15", text: "Weather Resistive Barrier", stationId: 15 },
+      { id: "term-7", text: "Sill", stationId: 7 },
+      { id: "term-12", text: "Rafter", stationId: 12 },
+      { id: "term-9", text: "King Stud", stationId: 9 },
+      { id: "term-5", text: "Sill / Sole Plate", stationId: 5 },
+      { id: "term-18", text: "Asphalt Shingles / Metal Roofing", stationId: 18 }
+    ];
+
+    const correctAnswers = {
+      1: ["floor joist", "floor joists", "joist", "joists"],
+      2: ["sub floor", "subfloor", "floor decking", "decking"],
+      3: ["stud", "studs", "wall stud", "wall studs", "common stud"],
+      4: ["top plate", "double top plate", "top plates"],
+      5: ["sill / sole plate", "sole plate", "sill plate", "mud sill", "mudsill", "bottom plate"],
+      6: ["header"],
+      7: ["sill", "rough sill", "window sill"],
+      8: ["cripple stud", "cripple studs", "cripple"],
+      9: ["king stud", "king studs"],
+      10: ["jack stud", "jack studs", "trimmer", "trimmer stud"],
+      11: ["truss", "roof truss", "trusses"],
+      12: ["rafter", "roof rafter", "rafters"],
+      13: ["insulation", "rigid insulation", "foam insulation"],
+      14: ["sheathing", "wall sheathing", "plywood sheathing", "osb sheathing"],
+      15: ["weather resistive barrier", "house wrap", "tyvek", "wrb", "moisture barrier"],
+      16: ["siding", "exterior siding", "lap siding", "vinyl siding", "wood siding"],
+      17: ["underlayment (roof felt)", "underlayment", "roof felt", "roofing felt", "felt", "tar paper"],
+      18: ["asphalt shingles / metal roofing", "asphalt shingles", "metal roofing", "shingles", "roofing"]
+    };
+
+    // Functional Action Verbs / Connectors required to form a real sentence
+    const actionVerbs = [
+      "support", "supports", "supporting", "supported",
+      "span", "spans", "spanning", "spanned",
+      "carry", "carries", "carrying", "carried",
+      "hold", "holds", "holding", "held",
+      "transfer", "transfers", "transferring",
+      "provide", "provides", "providing", "provided",
+      "attach", "attaches", "attaching", "attached",
+      "fasten", "fastens", "fastened",
+      "create", "creates", "creating", "created",
+      "cover", "covers", "covering", "covered",
+      "protect", "protects", "protecting", "protected",
+      "prevent", "prevents", "preventing",
+      "rest", "rests", "resting",
+      "lay", "lays", "placed", "installed", "used"
+    ];
+
+    // UI Prompts shown when component name is correct
+    const requiredPromptsUI = {
+      1: "<b>Joist</b>, <b>Span</b>, and <b>Floor Load</b>",
+      2: "<b>OSB</b> (or <b>Plywood</b>) and <b>Flat Surface</b>",
+      3: "<b>Vertical</b>, <b>Wall Cavity</b>, and <b>Support</b>",
+      4: "<b>Top of Wall</b> and <b>Rafters</b> (or <b>Trusses</b>)",
+      5: "<b>Bottom</b> and <b>Foundation</b> (or <b>Concrete</b>)",
+      6: "<b>Opening</b> (window/door) and <b>Beam</b> (or <b>Load Transfer</b>)",
+      7: "<b>Bottom</b> and <b>Window Frame</b>",
+      8: "<b>Short Stud</b> and <b>Opening</b> (window/header)",
+      9: "<b>Full Height</b> and <b>Jack Stud</b>",
+      10: "<b>Supports Header</b> and <b>Trimmer</b>",
+      11: "<b>Triangular</b>, <b>Roof Span</b>, and <b>Truss</b>",
+      12: "<b>Sloped</b>, <b>Roof Peak</b>, and <b>Rafter</b>",
+      13: "<b>Thermal</b>, <b>Heat Flow</b>, and <b>Cavity</b>",
+      14: "<b>Rigid Panels</b> and <b>Sheathing Strength</b>",
+      15: "<b>Moisture Barrier</b> and <b>Housewrap</b>",
+      16: "<b>Exterior Cladding</b> and <b>Weather Protection</b>",
+      17: "<b>Waterproof Layer</b> and <b>Roof Felt</b> (or <b>Tar Paper</b>)",
+      18: "<b>Exterior Roof Cover</b> and <b>Waterproof Shingles</b> (or <b>Metal</b>)"
+    };
+
+    // Keyword sets checked dynamically in JS validation
+    const descriptionKeySets = {
+      1: [["joist"], ["span"], ["load", "support", "floor"]],
+      2: [["osb", "plywood", "decking", "panel"], ["flat", "surface", "floor", "walk"]],
+      3: [["vertical"], ["wall", "cavity", "frame"], ["support", "weight", "load"]],
+      4: [["top", "upper"], ["wall", "plate"], ["rafter", "truss", "roof"]],
+      5: [["bottom", "base"], ["foundation", "concrete", "anchored", "sole", "mudsill"]],
+      6: [["opening", "door", "window"], ["beam", "header", "span", "load", "weight"]],
+      7: [["bottom", "base"], ["window", "opening", "sill", "frame"]],
+      8: [["short"], ["stud", "above", "below"], ["opening", "window", "header"]],
+      9: [["full", "height", "long"], ["jack", "trimmer", "side"], ["opening", "king"]],
+      10: [["support", "hold"], ["header", "beam"], ["short", "under", "trimmer", "jack"]],
+      11: [["triangular", "triangle"], ["roof", "span"], ["truss", "framework"]],
+      12: [["sloped", "slope", "inclined", "angled"], ["roof", "peak", "ridge"], ["rafter"]],
+      13: [["thermal", "temperature"], ["heat", "cold", "energy"], ["cavity", "wall", "insulation"]],
+      14: [["rigid", "structural", "panel", "board"], ["osb", "plywood", "sheathing"], ["strength", "wall", "roof"]],
+      15: [["moisture", "water", "vapor"], ["barrier", "housewrap", "tyvek", "wrap"]],
+      16: [["exterior", "outer", "outside"], ["cladding", "siding", "finish"], ["weather", "protect", "shield"]],
+      17: [["waterproof", "water", "moisture"], ["felt", "underlayment", "tar", "paper", "synthetic"], ["roof", "deck"]],
+      18: [["exterior", "outer", "top"], ["roof", "covering"], ["shingle", "shingles", "metal", "waterproof"]]
+    };
+
+    const hints = [
+      "Horizontal repeating framing timbers that span floor support structures to support live and dead loads.",
+      "Plywood or OSB board layer fastened across floor joists to create a flat working surface.",
+      "Standard vertical framing members extending from sole plate to top plate inside wall assemblies.",
+      "Horizontal top structural member of a wall frame supporting roof members or upper floors.",
+      "Horizontal timber framing board anchored at the base of a wall or foundation.",
+      "Heavy structural beam spanning across window or door openings to support overhead loads.",
+      "Horizontal framing member forming the bottom sill of a window rough opening.",
+      "Short vertical studs positioned directly above a header or below a window sill.",
+      "Full-length stud placed alongside a jack stud to reinforce a wall opening.",
+      "Shorter vertical stud that supports the weight of the header directly beneath it.",
+      "Pre-engineered triangular framework designed to span structural roof distances.",
+      "Inclined structural framing member extending from wall top plate to roof peak.",
+      "Material installed inside wall cavities to restrict heat flow and enhance thermal efficiency.",
+      "Panels (plywood or OSB) fastened to wall or roof framing to provide structural rigidity.",
+      "Protective membrane (like housewrap) installed over sheathing to block liquid water while allowing vapor permeability.",
+      "Exterior protective cladding installed on outer walls to shield the home from weather elements.",
+      "Black asphalt-saturated felt or synthetic sheet laid over roof sheathing before final roofing.",
+      "Primary exterior waterproof layer installed on top of the roof deck (shingles or standing-seam panels)."
+    ];
+
+    let currentId = 1;
+    let componentsData = JSON.parse(localStorage.getItem('woodFrameData18')) || {};
+
+    for (let i = 1; i <= 18; i++) {
+      if (!componentsData[i]) {
+        componentsData[i] = { name: '', purpose: '', clueUsed: false };
+      }
+    }
+
+    function init() {
+      renderWordBank();
+      renderNavButtons();
+      selectComponent(1);
+      loadStudentMeta();
+      updateProgress();
+    }
+
+    function renderWordBank() {
+      const container = document.getElementById('wordBankGrid');
+      container.innerHTML = '';
+      wordBankTerms.forEach(term => {
+        const chip = document.createElement('div');
+        chip.className = 'word-chip';
+        chip.id = term.id;
+        chip.innerText = term.text;
+        container.appendChild(chip);
+      });
+      updateWordBankStrikethroughs();
+    }
+
+    function updateWordBankStrikethroughs() {
+      wordBankTerms.forEach(term => {
+        const chip = document.getElementById(term.id);
+        const status = validateComponent(term.stationId);
+        if (chip) {
+          if (status.isValid) {
+            chip.classList.add('used');
+            chip.innerText = `✓ ${term.text}`;
+          } else {
+            chip.classList.remove('used');
+            chip.innerText = term.text;
+          }
+        }
+      });
+    }
+
+    function renderNavButtons() {
+      const container = document.getElementById('navButtons');
+      container.innerHTML = '';
+      for (let i = 1; i <= 18; i++) {
+        const btn = document.createElement('button');
+        const status = validateComponent(i);
+        
+        let statusClass = '';
+        if (componentsData[i].clueUsed && status.isValid) {
+          statusClass = 'clue-used';
+        } else if (status.isValid) {
+          statusClass = 'completed';
+        }
+
+        btn.className = `nav-btn ${i === currentId ? 'active' : ''} ${statusClass}`;
+        btn.innerText = i;
+        btn.onclick = () => selectComponent(i);
+        btn.id = `nav-btn-${i}`;
+        container.appendChild(btn);
+      }
+    }
+
+    // STRICTER STRUCTURAL + CONCEPTUAL DESCRIPTION VALIDATION
+    function validateComponent(id) {
+      const data = componentsData[id];
+      if (!data) return { isValid: false, isAttempted: false, message: '', termCorrect: false };
+
+      const name = (data.name || '').trim().toLowerCase();
+      const rawPurpose = (data.purpose || '').trim();
+      const purpose = rawPurpose.toLowerCase();
+
+      if (name === '' && purpose === '') {
+        return { isValid: false, isAttempted: false, message: '', termCorrect: false };
+      }
+
+      // 1. Validate Term Name
+      const validNames = correctAnswers[id];
+      const isCorrectTerm = validNames.some(valid => name === valid || name.includes(valid));
+
+      if (!isCorrectTerm) {
+        return {
+          isValid: false,
+          isAttempted: true,
+          termCorrect: false,
+          message: '❌ Incorrect Component Name: Check your term against the word bank.'
+        };
+      }
+
+      // 2. Sentence Length Check (minimum 6 words)
+      const words = purpose.split(/\s+/).filter(w => w.length > 0);
+      if (words.length < 6 || purpose.length < 25) {
+        return {
+          isValid: false,
+          isAttempted: true,
+          termCorrect: true,
+          message: '⚠️ Description Too Short: Write a complete explanatory sentence (at least 6 words).'
+        };
+      }
+
+      // 3. Action Verb / Preposition Functional Check
+      const hasActionVerb = actionVerbs.some(verb => purpose.includes(verb));
+      if (!hasActionVerb) {
+        return {
+          isValid: false,
+          isAttempted: true,
+          termCorrect: true,
+          message: '⚠️ Missing Action/Function: Explain what it DOES (e.g. supports, carries, spans, provides, protects).'
+        };
+      }
+
+      // 4. Keyword Sets Matching
+      const keyGroups = descriptionKeySets[id] || [];
+      const missedGroup = keyGroups.some(group => !group.some(kw => purpose.includes(kw)));
+
+      if (missedGroup) {
+        return {
+          isValid: false,
+          isAttempted: true,
+          termCorrect: true,
+          message: '⚠️ Incomplete Concepts: Include the required focus concepts shown above in a meaningful sentence.'
+        };
+      }
+
+      // 5. Anti-Echo / Word Diversity Check
+      // Count unique non-keyword words to ensure real sentence structure surrounds the terms
+      const allRequiredKeywords = keyGroups.flat();
+      const nonKeywordWords = words.filter(w => !allRequiredKeywords.includes(w) && !name.includes(w));
+      
+      if (nonKeywordWords.length < 3) {
+        return {
+          isValid: false,
+          isAttempted: true,
+          termCorrect: true,
+          message: '⚠️ Too Repetitive: Elaborate on how or why this component works in a full sentence.'
+        };
+      }
+
+      return { isValid: true, isAttempted: true, termCorrect: true, message: '✅ Station Validated & Correct!' };
+    }
+
+    function selectComponent(id) {
+      currentId = id;
+      
+      document.getElementById('workbenchTitle').innerText = `Station #${id} Analysis`;
+      document.getElementById('lblCompName').innerText = `Station #${id} Component Name / Technical Label:`;
+      document.getElementById('lblCompPurpose').innerText = `Station #${id} Structural Purpose & Description:`;
+      document.getElementById('keywordPrompt').innerHTML = `📌 <b>Component Name Verified!</b> Required description terms: ${requiredPromptsUI[id]}`;
+      
+      document.getElementById('compName').value = componentsData[id].name || '';
+      document.getElementById('compPurpose').value = componentsData[id].purpose || '';
+      document.getElementById('hintText').innerText = hints[id - 1];
+
+      if (componentsData[id].clueUsed) {
+        document.getElementById('hintBox').style.display = 'block';
+        document.getElementById('clueBtn').innerText = '💡 Clue Revealed';
+        document.getElementById('clueBtn').disabled = true;
+      } else {
+        document.getElementById('hintBox').style.display = 'none';
+        document.getElementById('clueBtn').innerText = '💡 Request Research Clue';
+        document.getElementById('clueBtn').disabled = false;
+      }
+
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById(`nav-btn-${id}`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      updateFeedbackUI();
+    }
+
+    function requestClue() {
+      if (componentsData[currentId].clueUsed) return;
+
+      const confirmClue = confirm("⚠️ WARNING: Requesting a clue will mark Station #" + currentId + " with a clue penalty and reduce your score for this question.\n\nAre you sure you want to reveal the clue?");
+      if (confirmClue) {
+        componentsData[currentId].clueUsed = true;
+        saveData();
+        selectComponent(currentId);
+        updateCurrentData();
+        renderNavButtons();
+      }
+    }
+
+    function updateCurrentData() {
+      componentsData[currentId].name = document.getElementById('compName').value;
+      componentsData[currentId].purpose = document.getElementById('compPurpose').value;
+
+      saveData();
+      updateProgress();
+      updateFeedbackUI();
+      updateWordBankStrikethroughs();
+
+      const btn = document.getElementById(`nav-btn-${currentId}`);
+      const status = validateComponent(currentId);
+
+      if (btn) {
+        btn.classList.remove('completed', 'clue-used');
+
+        if (status.isValid) {
+          if (componentsData[currentId].clueUsed) {
+            btn.classList.add('clue-used');
+          } else {
+            btn.classList.add('completed');
+          }
+        }
+      }
+    }
+
+    function updateFeedbackUI() {
+      const status = validateComponent(currentId);
+      const feedbackBox = document.getElementById('feedbackBox');
+      const badge = document.getElementById('statusBadge');
+      const nextBtn = document.getElementById('nextBtn');
+      const promptBox = document.getElementById('keywordPrompt');
+
+      if (status.termCorrect) {
+        promptBox.style.display = 'block';
+      } else {
+        promptBox.style.display = 'none';
+      }
+
+      if (!status.isAttempted) {
+        feedbackBox.style.display = 'none';
+        badge.innerText = 'Incomplete';
+        badge.style.background = '#e2e8f0';
+        badge.style.color = '#2d3748';
+        nextBtn.disabled = true;
+      } else if (status.isValid) {
+        feedbackBox.className = 'feedback-box success';
+        feedbackBox.innerText = status.message;
+        feedbackBox.style.display = 'block';
+        badge.innerText = componentsData[currentId].clueUsed ? 'Validated (Clue Penalty)' : 'Validated (Full Credit)';
+        badge.style.background = componentsData[currentId].clueUsed ? '#f39c12' : '#27ae60';
+        badge.style.color = 'white';
+        nextBtn.disabled = false;
+      } else {
+        feedbackBox.className = 'feedback-box error';
+        feedbackBox.innerText = status.message;
+        feedbackBox.style.display = 'block';
+        badge.innerText = 'Needs Correction';
+        badge.style.background = '#e74c3c';
+        badge.style.color = 'white';
+        nextBtn.disabled = true;
+      }
+    }
+
+    function updateProgress() {
+      let completedCount = 0;
+      let cluesUsedCount = 0;
+      let totalPoints = 0;
+
+      for (let i = 1; i <= 18; i++) {
+        if (validateComponent(i).isValid) {
+          completedCount++;
+          if (componentsData[i].clueUsed) {
+            cluesUsedCount++;
+            totalPoints += 2.777;
+          } else {
+            totalPoints += 5.555;
+          }
+        }
+      }
+
+      const scorePercent = Math.round(totalPoints);
+      document.getElementById('progressBar').style.width = `${(completedCount / 18) * 100}%`;
+      document.getElementById('progressText').innerText = `${completedCount} / 18 Completed (${cluesUsedCount} Clues Requested)`;
+      document.getElementById('totalScore').innerText = `${scorePercent}%`;
+
+      if (completedCount === 18) {
+        setTimeout(() => {
+          alert(`🎉 All 18 Stations Completed!\n\nYour Final Score: ${scorePercent}%\n\nPlease call your teacher over to review your grade before closing this window!`);
+        }, 300);
+      }
+    }
+
+    function navigate(direction) {
+      let newId = currentId + direction;
+      if (newId < 1) newId = 18;
+      if (newId > 18) newId = 1;
+      selectComponent(newId);
+    }
+
+    function saveData() {
+      localStorage.setItem('woodFrameData18', JSON.stringify(componentsData));
+      localStorage.setItem('studentName', document.getElementById('studentName').value);
+      localStorage.setItem('studentClass', document.getElementById('studentClass').value);
+    }
+
+    function loadStudentMeta() {
+      if (localStorage.getItem('studentName')) {
+        document.getElementById('studentName').value = localStorage.getItem('studentName');
+      }
+      if (localStorage.getItem('studentClass')) {
+        document.getElementById('studentClass').value = localStorage.getItem('studentClass');
+      }
+    }
+
+    function exportWorksheet() {
+      alert("REMINDER: Verify with your teacher first! Raise your hand to show your teacher your total score on screen before printing/exporting.");
+      window.print();
+    }
+
+    function resetForm() {
+      if (confirm('Are you sure you want to restart this assignment? All current answers and clue penalties will be wiped so you can re-attempt for 100% credit.')) {
+        localStorage.clear();
+        componentsData = {};
+        for (let i = 1; i <= 18; i++) componentsData[i] = { name: '', purpose: '', clueUsed: false };
+        init();
+      }
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>
